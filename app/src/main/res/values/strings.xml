@@ -1,0 +1,39 @@
+<resources>
+    <string name="app_name">Mungesa</string>
+    <string name="full_name_item">Default</string>
+    <string name="phone_number_item">Default</string>
+    <string name="notify">Njofto Prindërit</string>
+    <string name="select">Përzgjidh</string>
+    <string name="refresh_list">Rifresko listën</string>
+    <string name="done">Kryej</string>
+    <string name="bulksms">Bulk SMS</string>
+    <string name="yes">Po</string>
+    <string name="no">Jo</string>
+    <string name="sendMessageDialogContent">Vazhdoni me dërgimin e mesazheve?</string>
+
+    <string-array name="days">
+        <item>E Hënë</item>
+        <item>E Martë</item>
+        <item>E Mërkurë</item>
+        <item>E Enjte</item>
+        <item>E Premte</item>
+    </string-array>
+
+    <string-array name="hours">
+        <item>E Parë</item>
+        <item>E Dytë</item>
+        <item>E Tretë</item>
+        <item>E Katërt</item>
+        <item>E Pestë</item>
+        <item>E Gjashtë</item>
+        <item>E Shtatë</item>
+    </string-array>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="send">Dërgo</string>
+    <string name="change_links">Ndrysho linket</string>
+    <string name="absencesLink">Linku për file të mungesave:</string>
+    <string name="bulksmsLink">Linku për dërgimin e mesazheve në masë:</string>
+    <string name="update">Përditëso</string>
+</resources>

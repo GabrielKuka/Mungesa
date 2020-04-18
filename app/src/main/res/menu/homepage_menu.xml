@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/send"
+        android:title="@string/send"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/select"
+        android:title="@string/select"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/refresh"
+        android:title="@string/refresh_list"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/bulksms"
+        android:title="@string/bulksms" />
+    <item
+        android:id="@+id/update_links"
+        android:title="@string/change_links" />
+</menu>
