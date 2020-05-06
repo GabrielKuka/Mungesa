@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout>
+
+    <data>
+
+        <variable
+            name="day"
+            type="com.shkolla.mungesa.models.Day" />
+
+        <variable
+            name="interaction"
+            type="com.shkolla.mungesa.ui.adapters.DayAdapter.DayInteraction" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:onClick="@{() -> interaction.onDaySelected(day)}"
+        android:layout_height="wrap_content"
+        android:padding="10dp">
+
+        <CheckedTextView
+            android:id="@+id/day_id"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:checkMark="?android:attr/listChoiceIndicatorMultiple"
+            android:checked="@{day.isChecked}"
+            android:text="@{day.name}" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>
+

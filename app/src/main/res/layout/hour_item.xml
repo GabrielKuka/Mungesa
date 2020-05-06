@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout>
+
+    <data>
+
+        <variable
+            name="hour"
+            type="com.shkolla.mungesa.models.Hour" />
+
+        <variable
+            name="interaction"
+            type="com.shkolla.mungesa.ui.adapters.HourAdapter.HourInteraction" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="@{() -> interaction.onHourSelected(hour)}"
+        android:padding="10dp">
+
+        <CheckedTextView
+            android:id="@+id/hour_id"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:checkMark="?android:attr/listChoiceIndicatorMultiple"
+            android:checked="@{hour.isChecked}"
+            android:text="@{hour.name}" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>
+

@@ -1,0 +1,26 @@
+<resources>
+    <string name="app_name">Mungesa</string>
+    
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="done">Kryej</string>
+
+
+    <string-array name="days">
+        <item>E Hënë</item>
+        <item>E Martë</item>
+        <item>E Mërkurë</item>
+        <item>E Enjte</item>
+        <item>E Premte</item>
+    </string-array>
+
+    <string-array name="hours">
+        <item>E Parë</item>
+        <item>E Dytë</item>
+        <item>E Tretë</item>
+        <item>E Katërt</item>
+        <item>E Pestë</item>
+        <item>E Gjashtë</item>
+        <item>E Shtatë</item>
+    </string-array>
+
+</resources>

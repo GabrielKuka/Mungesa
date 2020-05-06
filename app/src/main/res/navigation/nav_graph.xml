@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/studentFragment">
+
+    <fragment
+        android:id="@+id/studentFragment"
+        android:name="com.shkolla.mungesa.ui.fragments.StudentFragment"
+        android:label="student_fragment"
+        tools:layout="@layout/student_fragment">
+        <action
+            android:id="@+id/action_studentFragment_to_daysFragment"
+            app:destination="@id/daysFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+    </fragment>
+    <fragment
+        android:id="@+id/daysFragment"
+        android:name="com.shkolla.mungesa.ui.fragments.DaysFragment"
+        android:label="days_fragment"
+        tools:layout="@layout/days_fragment">
+
+        <argument
+            android:name="currentStudent"
+            app:argType="com.shkolla.mungesa.models.Student" />
+
+        <action
+            android:id="@+id/action_daysFragment_to_hoursFragment"
+            app:destination="@id/hoursFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+    </fragment>
+    <fragment
+        android:id="@+id/hoursFragment"
+        android:name="com.shkolla.mungesa.ui.fragments.HoursFragment"
+        android:label="hours_fragment"
+        tools:layout="@layout/hours_fragment">
+
+        <argument
+            android:name="currentStudent"
+            app:argType="com.shkolla.mungesa.models.Student" />
+
+        <argument
+            android:name="currentDay"
+            app:argType="com.shkolla.mungesa.models.Day" />
+
+    </fragment>
+</navigation>
