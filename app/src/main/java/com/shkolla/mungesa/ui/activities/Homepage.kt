@@ -17,6 +17,7 @@ class Homepage : AppCompatActivity() {
         studentViewModel = ViewModelProvider(this).get(StudentViewModel::class.java)
     }
 
+
     fun getViewModel(): StudentViewModel {
         return studentViewModel
     }
