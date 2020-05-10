@@ -47,12 +47,13 @@ object MessageHandler {
             .append(student.firstName)
             .append(" ")
             .append(student.lastName)
+            .append(" ka munguar")
 
         for (day in student.days) {
             if (day.isChecked) {
                 builder
                     .append("\n")
-                    .append(" ka munguar ditën: ")
+                    .append(" ditën ")
                     .append(day.name.toLowerCase())
                     .append("\n")
 

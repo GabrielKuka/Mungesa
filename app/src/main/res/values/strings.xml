@@ -32,11 +32,12 @@
     </string-array>
     <string name="title_activity_settings">Vegla</string>
 
-    <!-- Messages Preferences -->
+
     <string name="absence_pref_link">Linku i mungesave</string>
     <string name="bulk_sms_pref_link">Linku i mesazheve në masë</string>
+    <string name="invalid_link">Linku për marrjen e të dhënave nuk është i saktë.</string>
 
-    <!-- Sync Preferences -->
+
     <string name="def_absence_link"><![CDATA[https://drive.google.com/u/0/uc?id=19nloeM5lIkIvAwhWh4wO6Gb2R9sBNBeC&export=download]]></string>
     <string name="def_bulk_sms_link"><![CDATA[https://drive.google.com/u/0/uc?id=1kZInKVLiM_Cts7sXfVaLGl8x8eOvaEB8&export=download]]></string>
 

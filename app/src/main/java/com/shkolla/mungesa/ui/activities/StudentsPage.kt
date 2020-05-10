@@ -66,7 +66,8 @@ class StudentsPage : AppCompatActivity(), StudentAdapter.StudentInteraction,
 
             val dialog = BasicDialog(SEND_MESSAGE_PURPOSE, content, this)
 
-            dialog.show(supportFragmentManager, "sendMessageDialog")
+            dialog.show(supportFragmentManager, "")
+
 
         } else {
             Quicktoast(this).swarn("Zgjidhni të paktën një nxënës")
@@ -79,13 +80,6 @@ class StudentsPage : AppCompatActivity(), StudentAdapter.StudentInteraction,
         val i = Intent(this, DaysPage::class.java)
         i.putExtras(bundle)
         startActivityForResult(i, SELECT_STUDENT_REQUEST)
-    }
-
-    private fun hasMessagePermission(): Boolean {
-
-        return (ContextCompat.checkSelfPermission(this, Manifest.permission.SEND_SMS)
-                == PackageManager.PERMISSION_GRANTED)
-
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -111,19 +105,8 @@ class StudentsPage : AppCompatActivity(), StudentAdapter.StudentInteraction,
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.send -> {
-                if (hasMessagePermission()) {
                     studentViewModel.getStudents().value
                     sendMessagesDialog()
-
-                } else {
-                    // Request permission
-                    ActivityCompat.requestPermissions(
-                        this,
-                        arrayOf(Manifest.permission.SEND_SMS),
-                        0
-                    )
-                }
-
                 true
             }
             R.id.refresh_list -> {
@@ -147,27 +130,7 @@ class StudentsPage : AppCompatActivity(), StudentAdapter.StudentInteraction,
         }
     }
 
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
 
-        when (requestCode) {
-            0 -> {
-                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    // Permission granted. Send messages
-
-                    sendMessagesDialog()
-                } else {
-                    // Permission Denied
-                    Quicktoast(this).swarn("Programi duhet të ketë leje për të dërguar mesazhe")
-                }
-            }
-        }
-
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-    }
 
     override fun onButtonClicked(purpose: Int, button: String) {
 

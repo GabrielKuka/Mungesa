@@ -9,6 +9,7 @@ import com.meet.quicktoast.Quicktoast
 import com.shkolla.mungesa.models.BulkMessage
 import com.shkolla.mungesa.repos.BulkMessageRepo
 import com.shkolla.mungesa.utils.InternetCheck
+import com.shkolla.mungesa.utils.NetworkCall
 import kotlinx.coroutines.launch
 
 class BulkSmsViewModel(application: Application) : AndroidViewModel(application) {
@@ -20,7 +21,7 @@ class BulkSmsViewModel(application: Application) : AndroidViewModel(application)
         _isLoading.value = true
         if (InternetCheck.checkInternet()) {
 
-            BulkMessageRepo.initBulkMessages(getApplication())
+            BulkMessageRepo(NetworkCall()).initBulkMessages(getApplication())
             _bulkMessages.value = BulkMessageRepo.bulkMessages
 
         } else {

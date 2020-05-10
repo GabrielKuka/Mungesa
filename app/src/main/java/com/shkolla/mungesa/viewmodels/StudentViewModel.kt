@@ -10,6 +10,7 @@ import com.shkolla.mungesa.models.Day
 import com.shkolla.mungesa.models.Student
 import com.shkolla.mungesa.repos.StudentRepo
 import com.shkolla.mungesa.utils.InternetCheck
+import com.shkolla.mungesa.utils.NetworkCall
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -30,8 +31,12 @@ class StudentViewModel(application: Application) : AndroidViewModel(application)
         _isLoading.value = true
 
         if (InternetCheck.checkInternet()) {
-            StudentRepo.initStudents(getApplication())
+
+
+            StudentRepo(NetworkCall()).initStudents(getApplication())
             _students.value = StudentRepo.students
+
+
         } else {
             Quicktoast(this@StudentViewModel.getApplication()).swarn("Nuk ka qasje në internet")
         }
@@ -92,7 +97,9 @@ class StudentViewModel(application: Application) : AndroidViewModel(application)
                     st.days.forEach { d ->
                         if (d.isChecked) {
                             d.hours.forEach { h ->
-                                h.isChecked = false
+                                if (h.isChecked) {
+                                    h.isChecked = false
+                                }
                             }
                             d.isChecked = false
                         }
