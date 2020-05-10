@@ -1,8 +1,16 @@
 <resources>
     <string name="app_name">Mungesa</string>
-    
+
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="done">Kryej</string>
+    <string name="send">Dërgo</string>
+    <string name="Po" />
+    <string name="no">Jo</string>
+    <string name="yes">Po</string>
+    <string name="askForSendingMessages">Vazhdoni me dërgimin e mesazheve?</string>
+    <string name="refresh">Rifresko</string>
+    <string name="bulk">Mesazhe në masë</string>
+    <string name="absences">Mungesa</string>
 
 
     <string-array name="days">
@@ -22,5 +30,14 @@
         <item>E Gjashtë</item>
         <item>E Shtatë</item>
     </string-array>
+    <string name="title_activity_settings">Vegla</string>
+
+    <!-- Messages Preferences -->
+    <string name="absence_pref_link">Linku i mungesave</string>
+    <string name="bulk_sms_pref_link">Linku i mesazheve në masë</string>
+
+    <!-- Sync Preferences -->
+    <string name="def_absence_link"><![CDATA[https://drive.google.com/u/0/uc?id=19nloeM5lIkIvAwhWh4wO6Gb2R9sBNBeC&export=download]]></string>
+    <string name="def_bulk_sms_link"><![CDATA[https://drive.google.com/u/0/uc?id=1kZInKVLiM_Cts7sXfVaLGl8x8eOvaEB8&export=download]]></string>
 
 </resources>

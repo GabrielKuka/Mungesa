@@ -4,65 +4,75 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
+import com.meet.quicktoast.Quicktoast
 import com.shkolla.mungesa.models.Day
-import com.shkolla.mungesa.models.Hour
 import com.shkolla.mungesa.models.Student
-import com.shkolla.mungesa.repos.AppData
 import com.shkolla.mungesa.repos.StudentRepo
+import com.shkolla.mungesa.utils.InternetCheck
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class StudentViewModel(application: Application) : AndroidViewModel(application) {
 
+    private val _isLoading: MutableLiveData<Boolean> =
+        MutableLiveData<Boolean>().apply { value = true }
+
     private val _students: MutableLiveData<MutableList<Student>> =
-        MutableLiveData<MutableList<Student>>().apply {
-            value = StudentRepo.students
+        MutableLiveData()
+
+    fun isLoading(): LiveData<Boolean> {
+        return _isLoading
+    }
+
+    fun initStudents() = viewModelScope.launch {
+        _isLoading.value = true
+
+        if (InternetCheck.checkInternet()) {
+            StudentRepo.initStudents(getApplication())
+            _students.value = StudentRepo.students
+        } else {
+            Quicktoast(this@StudentViewModel.getApplication()).swarn("Nuk ka qasje në internet")
         }
 
-    private val _days: MutableLiveData<MutableList<Day>> = MutableLiveData()
+        _isLoading.value = false
 
-    private val _hours: MutableLiveData<MutableList<Hour>> = MutableLiveData()
+
+    }
 
     fun getStudents(): LiveData<MutableList<Student>> {
         return _students
     }
 
-    fun getDays(currentStudent: Student): LiveData<MutableList<Day>> {
-        _days.value = currentStudent.days
-        return _days
-    }
-
-    fun getHours(currentDay: Day): LiveData<MutableList<Hour>> {
-        _hours.value = currentDay.hours
-        return _hours
-    }
-
-    fun currentStudent(currentStudent: Student) {
+    private fun currentStudent(currentStudent: Student) {
         currentStudent.isCurrent = !currentStudent.isCurrent
     }
 
-    fun currentDay(currentDay: Day) {
-        currentDay.isCurrent = !currentDay.isCurrent
-    }
+    fun selectStudent(currentStudent: Student) = viewModelScope.launch {
+        withContext(Dispatchers.Default) {
+            currentStudent.isChecked = areDaysSelected(currentStudent.days)
 
-    fun selectHour(currentDay: Day, hour: Hour) {
-        hour.isChecked = !hour.isChecked
+            _students.value?.find { s -> s.phoneNumber == currentStudent.phoneNumber }?.apply {
+                isChecked = currentStudent.isChecked
+                days = currentStudent.days
+            }
 
-        _hours.notifyObserver()
-    }
-
-    fun addSelectedHours(currentDay: Day) {
-
-        currentDay.isChecked = areHoursSelected(currentDay.hours)
-
-        currentDay(currentDay)
-
+            currentStudent(currentStudent)
+            withContext(Dispatchers.Main) {
+                _students.notifyObserver()
+            }
+        }
 
     }
 
-    fun addSelectedDays(currentStudent: Student) {
-
-        currentStudent.isChecked = areDaysSelected(currentStudent.days)
-
-        currentStudent(currentStudent)
+    fun areStudentsSelected(): Boolean {
+        for (st in _students.value!!.iterator()) {
+            if (st.isChecked) {
+                return true
+            }
+        }
+        return false
     }
 
     private fun areDaysSelected(days: List<Day>): Boolean {
@@ -75,24 +85,24 @@ class StudentViewModel(application: Application) : AndroidViewModel(application)
         return false
     }
 
-
-    private fun areHoursSelected(list: List<Hour>): Boolean {
-        for (hour in list) {
-            if (hour.isChecked) {
-                return true
+    fun resetStudents() = viewModelScope.launch {
+        withContext(Dispatchers.Default) {
+            StudentRepo.students.forEach { st ->
+                if (st.isChecked) {
+                    st.days.forEach { d ->
+                        if (d.isChecked) {
+                            d.hours.forEach { h ->
+                                h.isChecked = false
+                            }
+                            d.isChecked = false
+                        }
+                    }
+                    st.isChecked = false
+                }
             }
         }
 
-        return false
-    }
-
-
-    private fun resetTempDays() {
-        AppData.resetDays()
-    }
-
-    private fun getTempDays(): MutableList<Day> {
-        return AppData.tempDays
+        _students.notifyObserver()
     }
 
     private fun <T> MutableLiveData<T>.notifyObserver() {

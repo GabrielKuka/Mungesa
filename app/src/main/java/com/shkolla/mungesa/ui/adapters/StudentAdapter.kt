@@ -46,8 +46,10 @@ class StudentAdapter(private val interaction: StudentInteraction? = null) :
             is StudentViewHolder -> {
                 holder.binder.student = getStudentAt(position)
                 holder.binder.interaction = interaction
+
             }
         }
+
     }
 
     private fun getStudentAt(position: Int): Student {
@@ -59,6 +61,7 @@ class StudentAdapter(private val interaction: StudentInteraction? = null) :
     }
 
     fun submitList(list: List<Student>) {
+        differ.submitList(null)
         differ.submitList(list)
     }
 

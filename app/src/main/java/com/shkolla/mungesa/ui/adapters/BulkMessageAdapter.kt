@@ -7,20 +7,20 @@ import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.shkolla.mungesa.R
-import com.shkolla.mungesa.databinding.DayItemBinding
-import com.shkolla.mungesa.models.Day
+import com.shkolla.mungesa.databinding.BulkMessageItemBinding
+import com.shkolla.mungesa.models.BulkMessage
 
-class DayAdapter(private val interaction: DayInteraction? = null) :
+class BulkMessageAdapter(private val interaction: BulkMessageInteraction? = null) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    val DIFF_CALLBACK = object : DiffUtil.ItemCallback<Day>() {
+    val DIFF_CALLBACK = object : DiffUtil.ItemCallback<BulkMessage>() {
 
-        override fun areItemsTheSame(oldItem: Day, newItem: Day): Boolean {
-            return (oldItem.name == newItem.name) && (oldItem.isChecked == newItem.isChecked)
+        override fun areItemsTheSame(oldItem: BulkMessage, newItem: BulkMessage): Boolean {
+            TODO("not implemented")
         }
 
-        override fun areContentsTheSame(oldItem: Day, newItem: Day): Boolean {
-            return oldItem == newItem
+        override fun areContentsTheSame(oldItem: BulkMessage, newItem: BulkMessage): Boolean {
+            TODO("not implemented")
         }
 
     }
@@ -28,24 +28,21 @@ class DayAdapter(private val interaction: DayInteraction? = null) :
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-
-        val binder: DayItemBinding = DataBindingUtil.inflate(
+        val binder: BulkMessageItemBinding = DataBindingUtil.inflate(
             LayoutInflater.from(parent.context),
-            R.layout.day_item,
+            R.layout.bulk_message_item,
             parent,
             false
         )
 
-        return DayViewHolder(
-            binder
-        )
+        return BulkMsgViewHolder(binder)
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
-            is DayViewHolder -> {
-                holder.binder.day = getDayAt(position)
+            is BulkMsgViewHolder -> {
                 holder.binder.interaction = interaction
+                holder.binder.bulkMessage = getBulkMessageAt(position)
             }
         }
     }
@@ -54,22 +51,22 @@ class DayAdapter(private val interaction: DayInteraction? = null) :
         return differ.currentList.size
     }
 
-    private fun getDayAt(position: Int): Day {
+    private fun getBulkMessageAt(position: Int): BulkMessage {
         return differ.currentList[position]
     }
 
-    fun submitList(list: List<Day>) {
+    fun submitList(list: List<BulkMessage>) {
         differ.submitList(null)
         differ.submitList(list)
     }
 
-    class DayViewHolder
+    class BulkMsgViewHolder
         (
-        internal val binder: DayItemBinding
+        internal val binder: BulkMessageItemBinding
     ) : RecyclerView.ViewHolder(binder.root)
 
-    interface DayInteraction {
-        fun onDaySelected(day: Day)
+    interface BulkMessageInteraction {
+        fun onBulkMessageSelected(messageItem: BulkMessage)
     }
 }
 

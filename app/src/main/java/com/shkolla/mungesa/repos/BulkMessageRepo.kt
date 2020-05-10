@@ -3,7 +3,7 @@ package com.shkolla.mungesa.repos
 import android.content.Context
 import androidx.preference.PreferenceManager
 import com.shkolla.mungesa.R
-import com.shkolla.mungesa.models.Student
+import com.shkolla.mungesa.models.BulkMessage
 import com.shkolla.mungesa.ui.activities.SettingsActivity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -15,33 +15,32 @@ import java.net.MalformedURLException
 import java.net.URL
 import java.net.URLConnection
 
-object StudentRepo {
-    // store the list of students
-    var students: MutableList<Student> = mutableListOf()
-    var absenceUrl = ""
+object BulkMessageRepo {
+    val bulkMessages: MutableList<BulkMessage> = mutableListOf()
+    var bulkSmsUrl = ""
 
-    suspend fun initStudents(c: Context) {
-        absenceUrl = PreferenceManager.getDefaultSharedPreferences(c)
-            .getString(SettingsActivity.ABSENCE_SMS_LINK, c.getString(R.string.def_absence_link)).toString()
+    suspend fun initBulkMessages(c: Context) {
+        bulkSmsUrl = PreferenceManager.getDefaultSharedPreferences(c).getString(
+            SettingsActivity.BULK_SMS_LINK, c.getString(
+                R.string.def_bulk_sms_link
+            )
+        ).toString()
         networkRequest()
     }
 
-    // functions for performing network request
 
     private suspend fun networkRequest() = withContext(Dispatchers.IO) {
-
-        val url = async { setUpConnection() }
-        retrieveData(url.await())
-
+        val result = async { setUpConnection() }
+        retrieveBulkMessages(result.await())
     }
 
     private fun setUpConnection(): URL? {
         var mUrl: URL? = null
 
-        students.clear()
+        bulkMessages.clear()
         try {
             mUrl =
-                URL(absenceUrl)
+                URL(bulkSmsUrl)
         } catch (e: MalformedURLException) {
             println("Debug: Bad URL!")
         }
@@ -49,9 +48,9 @@ object StudentRepo {
         return mUrl
     }
 
-    private fun retrieveData(url: URL?) {
+    private fun retrieveBulkMessages(url: URL?) {
         var tokens: List<String>
-        var student: Student?
+        var bulkMessage: BulkMessage?
 
         try {
             assert(url != null)
@@ -67,8 +66,8 @@ object StudentRepo {
             while (line != null) {
                 tokens = line.split(",")
                 if (tokens.isNotEmpty()) {
-                    student = Student(tokens[0], tokens[1], tokens[2])
-                    students.add(student)
+                    bulkMessage = BulkMessage(tokens[0], tokens[1], tokens[2])
+                    bulkMessages.add(bulkMessage)
                     line = br.readLine()
                 }
             }
@@ -78,5 +77,6 @@ object StudentRepo {
             e.printStackTrace()
         }
     }
+
 
 }

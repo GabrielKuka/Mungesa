@@ -5,13 +5,15 @@
     <data>
 
         <variable
-            name="student"
-            type="com.shkolla.mungesa.models.Student" />
+            name="interaction"
+            type="com.shkolla.mungesa.ui.adapters.BulkMessageAdapter.BulkMessageInteraction" />
 
         <variable
-            name="interaction"
-            type="com.shkolla.mungesa.ui.adapters.StudentAdapter.StudentInteraction" />
+            name="bulkMessage"
+            type="com.shkolla.mungesa.models.BulkMessage" />
+
     </data>
+
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
@@ -25,19 +27,17 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="?android:attr/selectableItemBackground"
-            android:onClick="@{() -> interaction.onStudentSelected(student)}"
+            android:onClick="@{() -> interaction.onBulkMessageSelected(bulkMessage)}"
             android:paddingVertical="16dp">
 
-            <CheckedTextView
+            <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/student_item"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="16dp"
-                android:checkMark="?android:attr/listChoiceIndicatorMultiple"
-                android:checked="@{student.isChecked}"
-                android:text="@{student.firstName + ` ` + student.lastName}"
+                android:text="@{bulkMessage.studentName}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/imageView"
@@ -55,7 +55,7 @@
                 app:layout_constraintHorizontal_bias="0.065"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/student_item"
-                app:layout_constraintVertical_bias="0.0"
+                app:layout_constraintVertical_bias="0.062"
                 app:srcCompat="@drawable/ic_phone" />
 
             <TextView
@@ -65,10 +65,9 @@
                 android:layout_marginStart="4dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginEnd="16dp"
-                android:text="@{student.phoneNumber}"
+                android:text="@{bulkMessage.phoneNumber}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toEndOf="@+id/appCompatImageView"
                 app:layout_constraintTop_toBottomOf="@+id/student_item"
                 app:layout_constraintVertical_bias="0.0" />
