@@ -18,7 +18,6 @@ class StudentRepo(private val networkCall: NetworkCall) : INetworkCall by networ
         var absenceUrl = ""
     }
 
-
     suspend fun initStudents(c: Context) {
 
         // 1. Get the url stored in the device

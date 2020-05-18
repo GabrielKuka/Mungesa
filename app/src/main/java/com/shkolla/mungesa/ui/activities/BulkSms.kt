@@ -1,6 +1,7 @@
 package com.shkolla.mungesa.ui.activities
 
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
@@ -35,7 +36,16 @@ class BulkSms : AppCompatActivity(), BasicDialog.DialogButtonInteraction,
         initRecyclerView()
 
         bulkSmsViewModel = ViewModelProvider(this).get(BulkSmsViewModel::class.java)
+
         bulkSmsViewModel.initBulkMessages()
+
+        initObservers()
+
+    }
+
+
+
+    private fun initObservers() {
         bulkSmsViewModel.getBulkMessages().observe(this, Observer {
             bulkMessageAdapter.submitList(it)
         })
@@ -43,7 +53,6 @@ class BulkSms : AppCompatActivity(), BasicDialog.DialogButtonInteraction,
         bulkSmsViewModel.isLoading().observe(this, Observer {
             binder.isLoading = it
         })
-
     }
 
     private fun initRecyclerView() {

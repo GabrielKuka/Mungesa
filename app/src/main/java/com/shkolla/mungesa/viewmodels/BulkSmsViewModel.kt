@@ -18,20 +18,21 @@ class BulkSmsViewModel(application: Application) : AndroidViewModel(application)
         MutableLiveData<Boolean>().apply { value = false }
 
     fun initBulkMessages() = viewModelScope.launch {
-        if(!_isLoading.value!!){
-            _isLoading.value = true
-            if (InternetCheck.checkInternet()) {
 
-                BulkMessageRepo(NetworkCall()).initBulkMessages(getApplication())
-                _bulkMessages.value = BulkMessageRepo.bulkMessages
+            if (!_isLoading.value!!) {        // Makes sure it doesn't reload while it is already reloading
+                _isLoading.value = true
+                if (InternetCheck.checkInternet()) {
 
-            } else {
-                Quicktoast(this@BulkSmsViewModel.getApplication()).swarn("Nuk ka qasje në internet")
+                    BulkMessageRepo(NetworkCall()).initBulkMessages(getApplication())
+                    _bulkMessages.value = BulkMessageRepo.bulkMessages
+
+                } else {
+                    Quicktoast(this@BulkSmsViewModel.getApplication()).swarn("Nuk ka qasje në internet")
+                }
+
+                _isLoading.value = false
+
             }
-
-            _isLoading.value = false
-
-        }
 
     }
 
