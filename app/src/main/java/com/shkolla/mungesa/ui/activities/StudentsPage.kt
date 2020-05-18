@@ -1,15 +1,11 @@
 package com.shkolla.mungesa.ui.activities
 
-import android.Manifest
 import android.app.Activity
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
@@ -46,9 +42,11 @@ class StudentsPage : AppCompatActivity(), StudentAdapter.StudentInteraction,
 
         studentViewModel = ViewModelProvider(this).get(StudentViewModel::class.java)
         studentViewModel.initStudents()
+
         studentViewModel.getStudents().observe(this, Observer {
             studentAdapter.submitList(it)
         })
+
         studentViewModel.isLoading().observe(this, Observer {
             binder.isLoading = it
         })
@@ -70,7 +68,7 @@ class StudentsPage : AppCompatActivity(), StudentAdapter.StudentInteraction,
 
 
         } else {
-            Quicktoast(this).swarn("Zgjidhni të paktën një nxënës")
+            Quicktoast(this).swarn(resources.getString(R.string.choose_students_warning))
         }
     }
 
@@ -105,8 +103,7 @@ class StudentsPage : AppCompatActivity(), StudentAdapter.StudentInteraction,
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.send -> {
-                    studentViewModel.getStudents().value
-                    sendMessagesDialog()
+                sendMessagesDialog()
                 true
             }
             R.id.refresh_list -> {
@@ -121,15 +118,16 @@ class StudentsPage : AppCompatActivity(), StudentAdapter.StudentInteraction,
 
     override fun onBackPressed() {
         if (!studentViewModel.getStudents().value.isNullOrEmpty() && studentViewModel.areStudentsSelected()) {
+
             val content = "Përzgjedhjet do të hiqen. Vazhdoni?"
             val dialog =
                 BasicDialog(BACK_PRESS_MESSAGE_PURPOSE, content, this)
             dialog.show(supportFragmentManager, "")
+
         } else {
             super.onBackPressed()
         }
     }
-
 
 
     override fun onButtonClicked(purpose: Int, button: String) {
@@ -146,7 +144,7 @@ class StudentsPage : AppCompatActivity(), StudentAdapter.StudentInteraction,
                         res?.join()
                         studentViewModel.resetStudents()
                         withContext(Dispatchers.Main) {
-                            Quicktoast(this@StudentsPage).sinfo("Mesazhet u dërguan")
+                            Quicktoast(this@StudentsPage).sinfo(resources.getString(R.string.message_sent_success))
                         }
                     }
 

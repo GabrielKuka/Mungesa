@@ -15,20 +15,23 @@ import kotlinx.coroutines.launch
 class BulkSmsViewModel(application: Application) : AndroidViewModel(application) {
     private val _bulkMessages: MutableLiveData<MutableList<BulkMessage>> = MutableLiveData()
     private val _isLoading: MutableLiveData<Boolean> =
-        MutableLiveData<Boolean>().apply { value = true }
+        MutableLiveData<Boolean>().apply { value = false }
 
     fun initBulkMessages() = viewModelScope.launch {
-        _isLoading.value = true
-        if (InternetCheck.checkInternet()) {
+        if(!_isLoading.value!!){
+            _isLoading.value = true
+            if (InternetCheck.checkInternet()) {
 
-            BulkMessageRepo(NetworkCall()).initBulkMessages(getApplication())
-            _bulkMessages.value = BulkMessageRepo.bulkMessages
+                BulkMessageRepo(NetworkCall()).initBulkMessages(getApplication())
+                _bulkMessages.value = BulkMessageRepo.bulkMessages
 
-        } else {
-            Quicktoast(this@BulkSmsViewModel.getApplication()).swarn("Nuk ka qasje në internet")
+            } else {
+                Quicktoast(this@BulkSmsViewModel.getApplication()).swarn("Nuk ka qasje në internet")
+            }
+
+            _isLoading.value = false
+
         }
-
-        _isLoading.value = false
 
     }
 

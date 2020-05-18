@@ -14,7 +14,7 @@ class HourAdapter(private val interaction: HourInteraction? = null) :
     RecyclerView.Adapter<HourAdapter.HourViewHolder>() {
 
     fun submitList(list: List<Hour>?) {
-         differ.submitList(null)
+        // differ.submitList(null)
         differ.submitList(list)
     }
 
@@ -45,6 +45,7 @@ class HourAdapter(private val interaction: HourInteraction? = null) :
     override fun onBindViewHolder(holder: HourViewHolder, position: Int) {
         holder.binder.hour = getHourAt(position)
         holder.binder.interaction = interaction
+        holder.binder.position = position
     }
 
     val DIFF_CALLBACK = object : DiffUtil.ItemCallback<Hour>() {
@@ -66,7 +67,7 @@ class HourAdapter(private val interaction: HourInteraction? = null) :
     ) : RecyclerView.ViewHolder(binder.root)
 
     interface HourInteraction {
-        fun onHourSelected(hour: Hour)
+        fun onHourSelected(position: Int, hour: Hour)
     }
 
 }

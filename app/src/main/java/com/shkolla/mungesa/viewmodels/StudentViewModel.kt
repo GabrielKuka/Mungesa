@@ -18,36 +18,31 @@ import kotlinx.coroutines.withContext
 class StudentViewModel(application: Application) : AndroidViewModel(application) {
 
     private val _isLoading: MutableLiveData<Boolean> =
-        MutableLiveData<Boolean>().apply { value = true }
+        MutableLiveData<Boolean>().apply { value = false }
 
     private val _students: MutableLiveData<MutableList<Student>> =
         MutableLiveData()
 
-    fun isLoading(): LiveData<Boolean> {
-        return _isLoading
-    }
+
+    fun isLoading(): LiveData<Boolean> = _isLoading
+
+    fun getStudents(): LiveData<MutableList<Student>> = _students
+
 
     fun initStudents() = viewModelScope.launch {
-        _isLoading.value = true
+        if (!_isLoading.value!!) {
+            _isLoading.value = true
+            if (InternetCheck.checkInternet()) {
 
-        if (InternetCheck.checkInternet()) {
+                StudentRepo(NetworkCall()).initStudents(getApplication())
+                _students.value = StudentRepo.students
 
-
-            StudentRepo(NetworkCall()).initStudents(getApplication())
-            _students.value = StudentRepo.students
-
-
-        } else {
-            Quicktoast(this@StudentViewModel.getApplication()).swarn("Nuk ka qasje në internet")
+            } else {
+                Quicktoast(this@StudentViewModel.getApplication()).swarn("Nuk ka qasje në internet")
+            }
+            _isLoading.value = false
         }
 
-        _isLoading.value = false
-
-
-    }
-
-    fun getStudents(): LiveData<MutableList<Student>> {
-        return _students
     }
 
     private fun currentStudent(currentStudent: Student) {
