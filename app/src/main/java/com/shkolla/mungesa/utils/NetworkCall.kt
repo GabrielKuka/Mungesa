@@ -54,7 +54,7 @@ class NetworkCall : INetworkCall {
 
             while (line != null) {
 
-                tokens = line.split(",")
+                tokens = line.split("|")
 
                 if (tokens.isNotEmpty()) {
                     addItem(tokens)

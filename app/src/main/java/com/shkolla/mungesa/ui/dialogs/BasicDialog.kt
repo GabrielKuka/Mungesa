@@ -22,7 +22,7 @@ class BasicDialog(
 
                 .setPositiveButton(
                     R.string.yes
-                ) { dialog, id ->
+                ) { _, _ ->
                     // send messages
                     interaction?.onButtonClicked(purpose, "yes")
 

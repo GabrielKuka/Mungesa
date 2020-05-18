@@ -9,6 +9,10 @@
             type="com.shkolla.mungesa.models.Hour" />
 
         <variable
+            name="position"
+            type="Integer" />
+
+        <variable
             name="interaction"
             type="com.shkolla.mungesa.ui.adapters.HourAdapter.HourInteraction" />
     </data>
@@ -17,7 +21,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?android:attr/selectableItemBackground"
-        android:onClick="@{() -> interaction.onHourSelected(hour)}"
+        android:onClick="@{() -> interaction.onHourSelected(position, hour)}"
         android:padding="10dp">
 
         <CheckedTextView

@@ -58,7 +58,8 @@ class HoursPage : AppCompatActivity(), HourAdapter.HourInteraction {
         }
     }
 
-    override fun onHourSelected(hour: Hour) {
+    override fun onHourSelected(position: Int, hour: Hour) {
         hourViewModel.selectHour(hour)
+        hourAdapter.notifyItemChanged(position)
     }
 }
