@@ -5,12 +5,10 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.meet.quicktoast.Quicktoast
 import com.shkolla.mungesa.models.Day
 import com.shkolla.mungesa.models.Student
 import com.shkolla.mungesa.repos.StudentRepo
-import com.shkolla.mungesa.utils.InternetCheck
-import com.shkolla.mungesa.utils.NetworkCall
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -32,15 +30,15 @@ class StudentViewModel(application: Application) : AndroidViewModel(application)
     fun initStudents() = viewModelScope.launch {
         if (!_isLoading.value!!) {
             _isLoading.value = true
-            if (InternetCheck.checkInternet()) {
 
-                StudentRepo(NetworkCall()).initStudents(getApplication())
-                _students.value = StudentRepo.students
-
-            } else {
-                Quicktoast(this@StudentViewModel.getApplication()).swarn("Nuk ka qasje në internet")
+            CoroutineScope(Dispatchers.IO).launch {
+                StudentRepo().initStudents(getApplication())
+                withContext(Dispatchers.Main) {
+                    _students.value = StudentRepo.students
+                    _isLoading.value = false
+                }
             }
-            _isLoading.value = false
+
         }
 
     }

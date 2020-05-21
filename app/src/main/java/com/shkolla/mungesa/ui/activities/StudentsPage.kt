@@ -10,6 +10,7 @@ import androidx.core.os.bundleOf
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.preference.PreferenceManager
 import com.meet.quicktoast.Quicktoast
 import com.shkolla.mungesa.R
 import com.shkolla.mungesa.databinding.StudentsPageBinding
@@ -19,15 +20,18 @@ import com.shkolla.mungesa.repos.AppData.SELECT_STUDENT_REQUEST
 import com.shkolla.mungesa.repos.AppData.SEND_MESSAGE_PURPOSE
 import com.shkolla.mungesa.ui.adapters.StudentAdapter
 import com.shkolla.mungesa.ui.dialogs.BasicDialog
+import com.shkolla.mungesa.ui.dialogs.TextDialog
+import com.shkolla.mungesa.utils.IFilePath
 import com.shkolla.mungesa.utils.MessageHandler
 import com.shkolla.mungesa.viewmodels.StudentViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.io.File
 
 class StudentsPage : AppCompatActivity(), StudentAdapter.StudentInteraction,
-    BasicDialog.DialogButtonInteraction {
+    BasicDialog.DialogButtonInteraction, IFilePath {
 
     private lateinit var studentViewModel: StudentViewModel
     private lateinit var studentAdapter: StudentAdapter
@@ -107,7 +111,13 @@ class StudentsPage : AppCompatActivity(), StudentAdapter.StudentInteraction,
                 true
             }
             R.id.refresh_list -> {
-                studentViewModel.initStudents()
+                val path = PreferenceManager.getDefaultSharedPreferences(this)
+                    .getString(SettingsActivity.EXCEL_FILE_KEY, "").toString()
+
+                if (isPathValid(path)) {
+                    studentViewModel.initStudents()
+                }
+
                 true
             }
             else -> {
@@ -161,6 +171,28 @@ class StudentsPage : AppCompatActivity(), StudentAdapter.StudentInteraction,
                 Quicktoast(this).swarn("Ndodhi një gabim")
             }
         }
+    }
+
+    override fun isPathValid(path: String): Boolean {
+        if (path == "") {
+            val content = resources.getString(R.string.invalid_path)
+            TextDialog(content).show(supportFragmentManager, "")
+            return false
+        }
+
+        if (!path.endsWith(".xls") && !path.endsWith(".xlsx")) {
+            val content = resources.getString(R.string.invalid_file)
+            TextDialog(content).show(supportFragmentManager, "")
+            return false
+        }
+
+        if (!File(path).exists()) {
+            val content = resources.getString(R.string.no_file)
+            TextDialog(content).show(supportFragmentManager, "")
+            return false
+        }
+
+        return true
     }
 
 

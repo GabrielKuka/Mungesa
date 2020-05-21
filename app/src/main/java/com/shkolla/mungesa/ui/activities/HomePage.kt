@@ -9,12 +9,17 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.preference.PreferenceManager
 import com.meet.quicktoast.Quicktoast
 import com.shkolla.mungesa.R
-
+import com.shkolla.mungesa.ui.dialogs.TextDialog
+import com.shkolla.mungesa.utils.IFilePath
 import kotlinx.android.synthetic.main.home_page_activity.*
+import java.io.File
 
-class HomePage : AppCompatActivity() {
+class HomePage : AppCompatActivity(), IFilePath {
+
+    private lateinit var pathPref: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -22,17 +27,36 @@ class HomePage : AppCompatActivity() {
 
         requestPermission()
 
+        pathPref = PreferenceManager.getDefaultSharedPreferences(this)
+            .getString(SettingsActivity.EXCEL_FILE_KEY, "").toString()
+
         absence_button.setOnClickListener {
-            startActivity(Intent(this, StudentsPage::class.java))
+
+            if (isPathValid(pathPref)) {
+                startActivity(Intent(this, StudentsPage::class.java))
+            }
+
         }
 
         bulk_sms_button.setOnClickListener {
-            startActivity(Intent(this, BulkSms::class.java))
+            if (isPathValid(pathPref)) {
+                startActivity(Intent(this, BulkSms::class.java))
+            }
+
         }
     }
 
-    private fun requestPermission(){
-        if(!hasMessagePermission()){
+    override fun onStart() {
+        super.onStart()
+        checkExcelFile()
+    }
+
+    private fun checkExcelFile() {
+        isPathValid(pathPref)
+    }
+
+    private fun requestPermission() {
+        if (!hasMessagePermission()) {
             ActivityCompat.requestPermissions(
                 this,
                 arrayOf(android.Manifest.permission.SEND_SMS),
@@ -85,5 +109,27 @@ class HomePage : AppCompatActivity() {
                 super.onOptionsItemSelected(item)
             }
         }
+    }
+
+    override fun isPathValid(path: String): Boolean {
+        if (path == "") {
+            val content = resources.getString(R.string.invalid_path)
+            TextDialog(content).show(supportFragmentManager, "")
+            return false
+        }
+
+        if (!path.endsWith(".xls") && !path.endsWith(".xlsx")) {
+            val content = resources.getString(R.string.invalid_file)
+            TextDialog(content).show(supportFragmentManager, "")
+            return false
+        }
+
+        if (!File(path).exists()) {
+            val content = resources.getString(R.string.no_file)
+            TextDialog(content).show(supportFragmentManager, "")
+            return false
+        }
+
+        return true
     }
 }

@@ -2,50 +2,53 @@ package com.shkolla.mungesa.repos
 
 import android.content.Context
 import androidx.preference.PreferenceManager
-import com.meet.quicktoast.Quicktoast
-import com.shkolla.mungesa.R
 import com.shkolla.mungesa.models.BulkMessage
 import com.shkolla.mungesa.ui.activities.SettingsActivity
-import com.shkolla.mungesa.utils.INetworkCall
-import com.shkolla.mungesa.utils.NetworkCall
-import kotlinx.coroutines.*
+import com.shkolla.mungesa.utils.ExcelFileReader
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
-class BulkMessageRepo(private val networkCall: NetworkCall) : INetworkCall by networkCall {
+class BulkMessageRepo() {
     companion object {
         val bulkMessages: MutableList<BulkMessage> = mutableListOf()
-        var bulkSmsUrl = ""
+        var bulkSmsPath = ""
     }
 
-    suspend fun initBulkMessages(c: Context) {
+    fun initBulkMessages(c: Context) {
 
-        // 1. Get the url stored in the device
-        bulkSmsUrl = PreferenceManager.getDefaultSharedPreferences(c).getString(
-            SettingsActivity.BULK_SMS_LINK, c.getString(
-                R.string.def_bulk_sms_link
-            )
+        // 1. Get the path stored in the device
+        bulkSmsPath = PreferenceManager.getDefaultSharedPreferences(c).getString(
+            SettingsActivity.EXCEL_FILE_KEY, ""
         ).toString()
 
         // 2. Clear the list if not empty
         bulkMessages.clear()
 
-        // 3. Make the network request
-        networkRequest(c)
+        // 3. Retrieve Excel Data
+        readExcelData()
     }
 
+    private fun readExcelData() {
+        ExcelFileReader().readWorkSheet(bulkSmsPath) { workBook ->
+            val sheet = workBook.getSheetAt(AppData.BULK_SMS_WORKSHEET)
+            val rowCount = sheet.physicalNumberOfRows
+            val formulaEvaluator = workBook.creationHelper.createFormulaEvaluator()
 
-    private suspend inline fun networkRequest(c: Context) = withContext(Dispatchers.IO) {
+            CoroutineScope(Dispatchers.Default).launch {
+                for (rowPos in 1 until rowCount) {
+                    val row = sheet.getRow(rowPos)
 
-        // 1. Check if the url is valid
-        val result =
-            async {
-                networkCall.checkUrl(bulkSmsUrl, c)
+                    val studentFullName = ExcelFileReader.getCellAsString(row, 0, formulaEvaluator)
+                    val message = ExcelFileReader.getCellAsString(row, 1, formulaEvaluator)
+                    val phoneNumber = ExcelFileReader.getCellAsString(row, 2, formulaEvaluator)
+
+                    bulkMessages.add(BulkMessage(studentFullName!!, message!!, phoneNumber!!))
+
+                }
             }
-
-
-        // 2. Retrieve the data from the server
-        networkCall.retrieveData(result.await()) { tokens ->
-            bulkMessages.add(BulkMessage(tokens[0], tokens[1], tokens[2]))
         }
     }
+
 
 }

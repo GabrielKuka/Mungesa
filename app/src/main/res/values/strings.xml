@@ -33,14 +33,10 @@
 
     <string name="choose_students_warning">Zgjidhni të paktën një nxënës</string>
     <string name="message_sent_success">Mesazhet u dërguan</string>
-    <string name="no_internet_warning">Nuk ka qasje në internet</string>
 
-    <string name="absence_pref_link">Linku i mungesave</string>
-    <string name="bulk_sms_pref_link">Linku i mesazheve në masë</string>
-    <string name="invalid_link">Linku për marrjen e të dhënave nuk është i saktë.</string>
+    <string name="no_file">File i excel nuk ekziston. Shkoni tek settings për të zgjedhur file.</string>
+    <string name="invalid_file">File i përzgjedhur nuk është i pranueshëm</string>
+    <string name="invalid_path">File Excel nuk është i përzgjedhur. Shkoni tek settings për të zgjedhur file.</string>
 
-
-    <string name="def_absence_link"><![CDATA[https://drive.google.com/u/0/uc?id=19nloeM5lIkIvAwhWh4wO6Gb2R9sBNBeC&export=download]]></string>
-    <string name="def_bulk_sms_link"><![CDATA[https://drive.google.com/u/0/uc?id=1kZInKVLiM_Cts7sXfVaLGl8x8eOvaEB8&export=download]]></string>
 
 </resources>

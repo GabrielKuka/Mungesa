@@ -1,13 +1,13 @@
 package com.shkolla.mungesa.ui.activities
 
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.preference.PreferenceManager
 import com.meet.quicktoast.Quicktoast
 import com.shkolla.mungesa.R
 import com.shkolla.mungesa.databinding.BulkSmsActivityBinding
@@ -16,14 +16,16 @@ import com.shkolla.mungesa.repos.AppData.SEND_MESSAGE_PURPOSE
 import com.shkolla.mungesa.ui.adapters.BulkMessageAdapter
 import com.shkolla.mungesa.ui.dialogs.BasicDialog
 import com.shkolla.mungesa.ui.dialogs.TextDialog
+import com.shkolla.mungesa.utils.IFilePath
 import com.shkolla.mungesa.utils.MessageHandler
 import com.shkolla.mungesa.viewmodels.BulkSmsViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.io.File
 
 class BulkSms : AppCompatActivity(), BasicDialog.DialogButtonInteraction,
-    BulkMessageAdapter.BulkMessageInteraction {
+    BulkMessageAdapter.BulkMessageInteraction, IFilePath {
 
     private lateinit var bulkMessageAdapter: BulkMessageAdapter
     private lateinit var bulkSmsViewModel: BulkSmsViewModel
@@ -42,7 +44,6 @@ class BulkSms : AppCompatActivity(), BasicDialog.DialogButtonInteraction,
         initObservers()
 
     }
-
 
 
     private fun initObservers() {
@@ -76,7 +77,12 @@ class BulkSms : AppCompatActivity(), BasicDialog.DialogButtonInteraction,
             }
             R.id.refresh_list -> {
                 // refresh list
-                bulkSmsViewModel.initBulkMessages()
+                val path = PreferenceManager.getDefaultSharedPreferences(this)
+                    .getString(SettingsActivity.EXCEL_FILE_KEY, "").toString()
+                if (isPathValid(path)) {
+                    bulkSmsViewModel.initBulkMessages()
+                }
+
                 true
             }
             else -> {
@@ -115,5 +121,27 @@ class BulkSms : AppCompatActivity(), BasicDialog.DialogButtonInteraction,
 
     override fun onBulkMessageSelected(messageItem: BulkMessage) {
         TextDialog(messageItem.message).show(supportFragmentManager, "")
+    }
+
+    override fun isPathValid(path: String): Boolean {
+        if (path == "") {
+            val content = resources.getString(R.string.invalid_path)
+            TextDialog(content).show(supportFragmentManager, "")
+            return false
+        }
+
+        if (!path.endsWith(".xls") && !path.endsWith(".xlsx")) {
+            val content = resources.getString(R.string.invalid_file)
+            TextDialog(content).show(supportFragmentManager, "")
+            return false
+        }
+
+        if (!File(path).exists()) {
+            val content = resources.getString(R.string.no_file)
+            TextDialog(content).show(supportFragmentManager, "")
+            return false
+        }
+
+        return true
     }
 }

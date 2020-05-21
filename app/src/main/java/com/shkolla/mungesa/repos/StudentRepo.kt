@@ -2,49 +2,51 @@ package com.shkolla.mungesa.repos
 
 import android.content.Context
 import androidx.preference.PreferenceManager
-import com.shkolla.mungesa.R
 import com.shkolla.mungesa.models.Student
 import com.shkolla.mungesa.ui.activities.SettingsActivity
-import com.shkolla.mungesa.utils.INetworkCall
-import com.shkolla.mungesa.utils.NetworkCall
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
-import kotlinx.coroutines.withContext
+import com.shkolla.mungesa.utils.ExcelFileReader
 
-class StudentRepo(private val networkCall: NetworkCall) : INetworkCall by networkCall {
+class StudentRepo() {
 
     companion object {
         var students: MutableList<Student> = mutableListOf()
-        var absenceUrl = ""
+        var absencePath = ""
     }
 
-    suspend fun initStudents(c: Context) {
+    fun initStudents(c: Context) {
 
         // 1. Get the url stored in the device
-        absenceUrl = PreferenceManager.getDefaultSharedPreferences(c)
-            .getString(SettingsActivity.ABSENCE_SMS_LINK, c.getString(R.string.def_absence_link))
+        absencePath = PreferenceManager.getDefaultSharedPreferences(c)
+            .getString(SettingsActivity.EXCEL_FILE_KEY, "")
             .toString()
 
         // 2. Clear the list if not empty
         students.clear()
 
-        // 3. Make the network request
-        networkRequest(c)
+        // 3. Retrieve excel data
+        readExcelData()
+
+
     }
 
+    private fun readExcelData() {
+        ExcelFileReader().readWorkSheet(absencePath) { workBook ->
+            val sheet = workBook.getSheetAt(AppData.STUDENT_WORKSHEET)
+            val rowCount = sheet.physicalNumberOfRows
+            val formulaEvaluator = workBook.creationHelper.createFormulaEvaluator()
 
-    private suspend inline fun networkRequest(c: Context) = withContext(Dispatchers.IO) {
+            for (rowPos in 1 until rowCount) {
 
-        // 1. Check if url is valid
-        val url = async {
-            networkCall.checkUrl(absenceUrl, c)
+                val row = sheet.getRow(rowPos)
+
+                val firstName = ExcelFileReader.getCellAsString(row, 0, formulaEvaluator)
+                val lastName = ExcelFileReader.getCellAsString(row, 1, formulaEvaluator)
+                val phoneNumber = ExcelFileReader.getCellAsString(row, 2, formulaEvaluator)
+
+                students.add(Student(firstName!!, lastName!!, phoneNumber!!))
+            }
+
         }
-
-        // 2. Retrieve the data
-        retrieveData(url.await()) {
-            students.add(Student(it[0], it[1], it[2]))
-        }
-
     }
 
 

@@ -5,12 +5,12 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.meet.quicktoast.Quicktoast
 import com.shkolla.mungesa.models.BulkMessage
 import com.shkolla.mungesa.repos.BulkMessageRepo
-import com.shkolla.mungesa.utils.InternetCheck
-import com.shkolla.mungesa.utils.NetworkCall
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class BulkSmsViewModel(application: Application) : AndroidViewModel(application) {
     private val _bulkMessages: MutableLiveData<MutableList<BulkMessage>> = MutableLiveData()
@@ -19,20 +19,19 @@ class BulkSmsViewModel(application: Application) : AndroidViewModel(application)
 
     fun initBulkMessages() = viewModelScope.launch {
 
-            if (!_isLoading.value!!) {        // Makes sure it doesn't reload while it is already reloading
-                _isLoading.value = true
-                if (InternetCheck.checkInternet()) {
+        if (!_isLoading.value!!) {        // Makes sure it doesn't reload while it is already reloading
+            _isLoading.value = true
 
-                    BulkMessageRepo(NetworkCall()).initBulkMessages(getApplication())
+            CoroutineScope(Dispatchers.Default).launch {
+                BulkMessageRepo().initBulkMessages(getApplication())
+                withContext(Dispatchers.Main) {
                     _bulkMessages.value = BulkMessageRepo.bulkMessages
-
-                } else {
-                    Quicktoast(this@BulkSmsViewModel.getApplication()).swarn("Nuk ka qasje në internet")
+                    _isLoading.value = false
                 }
-
-                _isLoading.value = false
-
             }
+
+
+        }
 
     }
 

@@ -1,15 +1,8 @@
 <PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <EditTextPreference
-        app:defaultValue="@string/def_absence_link"
-        app:key="absence_sms_link"
-        app:title="@string/absence_pref_link"
-        app:useSimpleSummaryProvider="true" />
-
-    <EditTextPreference
-        app:defaultValue="@string/def_bulk_sms_link"
-        app:key="bulk_sms_link"
-        app:title="@string/bulk_sms_pref_link"
-        app:useSimpleSummaryProvider="true" />
+    <Preference
+        app:key="excelFilePath"
+        app:summary="Select the excel file"
+        app:title="Excel File" />
 
 </PreferenceScreen>
