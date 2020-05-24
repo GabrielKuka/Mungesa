@@ -9,6 +9,7 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.lifecycleScope
 import androidx.preference.PreferenceManager
 import com.meet.quicktoast.Quicktoast
 import com.shkolla.mungesa.R
@@ -16,6 +17,8 @@ import com.shkolla.mungesa.ui.dialogs.TextDialog
 import com.shkolla.mungesa.utils.ExcelFileReader
 import com.shkolla.mungesa.utils.IFilePath
 import kotlinx.android.synthetic.main.home_page_activity.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.io.File
 
 class HomePage : AppCompatActivity(), IFilePath {
@@ -37,11 +40,9 @@ class HomePage : AppCompatActivity(), IFilePath {
             .getString(SettingsActivity.EXCEL_FILE_KEY, "").toString()
 
         absence_button.setOnClickListener {
-
             if (checkExcelFile(pathPref)) {
-                startActivity(Intent(this, StudentsPage::class.java))
+                startActivity(Intent(this@HomePage, StudentsPage::class.java))
             }
-
         }
 
         bulk_sms_button.setOnClickListener {
@@ -53,6 +54,7 @@ class HomePage : AppCompatActivity(), IFilePath {
     }
 
     private fun checkExcelFile(path: String): Boolean {
+
         val fileReader = ExcelFileReader(this)
 
         if (!fileReader.validatePath(path)) return false
@@ -62,11 +64,11 @@ class HomePage : AppCompatActivity(), IFilePath {
         return true
     }
 
-    private fun requestPermission() {
+    private fun requestPermission() = lifecycleScope.launch(Dispatchers.Default) {
         if (!hasMessagePermission()) {
             ActivityCompat.requestPermissions(
-                this,
-                arrayOf(android.Manifest.permission.SEND_SMS),
+                this@HomePage,
+                arrayOf(Manifest.permission.SEND_SMS),
                 1
             )
         }

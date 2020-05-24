@@ -14,7 +14,6 @@ class HourAdapter(private val interaction: HourInteraction? = null) :
     RecyclerView.Adapter<HourAdapter.HourViewHolder>() {
 
     fun submitList(list: List<Hour>?) {
-        // differ.submitList(null)
         differ.submitList(list)
     }
 
