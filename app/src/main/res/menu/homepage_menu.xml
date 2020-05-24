@@ -6,6 +6,11 @@
         android:id="@+id/settings_button"
         android:icon="@drawable/ic_settings"
         android:title="@string/title_activity_settings"
-        app:showAsAction="always" />
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/about_app"
+        android:title="@string/about_me"
+        app:showAsAction="never" />
 
 </menu>

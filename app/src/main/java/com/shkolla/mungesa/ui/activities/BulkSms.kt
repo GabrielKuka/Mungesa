@@ -16,7 +16,6 @@ import com.shkolla.mungesa.repos.AppData.SEND_MESSAGE_PURPOSE
 import com.shkolla.mungesa.ui.adapters.BulkMessageAdapter
 import com.shkolla.mungesa.ui.dialogs.BasicDialog
 import com.shkolla.mungesa.ui.dialogs.TextDialog
-import com.shkolla.mungesa.utils.IFilePath
 import com.shkolla.mungesa.utils.MessageHandler
 import com.shkolla.mungesa.viewmodels.BulkSmsViewModel
 import kotlinx.coroutines.CoroutineScope
@@ -25,7 +24,7 @@ import kotlinx.coroutines.launch
 import java.io.File
 
 class BulkSms : AppCompatActivity(), BasicDialog.DialogButtonInteraction,
-    BulkMessageAdapter.BulkMessageInteraction, IFilePath {
+    BulkMessageAdapter.BulkMessageInteraction {
 
     private lateinit var bulkMessageAdapter: BulkMessageAdapter
     private lateinit var bulkSmsViewModel: BulkSmsViewModel
@@ -79,8 +78,11 @@ class BulkSms : AppCompatActivity(), BasicDialog.DialogButtonInteraction,
                 // refresh list
                 val path = PreferenceManager.getDefaultSharedPreferences(this)
                     .getString(SettingsActivity.EXCEL_FILE_KEY, "").toString()
-                if (isPathValid(path)) {
+
+                if (File(path).exists()) {
                     bulkSmsViewModel.initBulkMessages()
+                } else {
+                    TextDialog(resources.getString(R.string.no_file)).show(supportFragmentManager, "")
                 }
 
                 true
@@ -123,25 +125,4 @@ class BulkSms : AppCompatActivity(), BasicDialog.DialogButtonInteraction,
         TextDialog(messageItem.message).show(supportFragmentManager, "")
     }
 
-    override fun isPathValid(path: String): Boolean {
-        if (path == "") {
-            val content = resources.getString(R.string.invalid_path)
-            TextDialog(content).show(supportFragmentManager, "")
-            return false
-        }
-
-        if (!path.endsWith(".xls") && !path.endsWith(".xlsx")) {
-            val content = resources.getString(R.string.invalid_file)
-            TextDialog(content).show(supportFragmentManager, "")
-            return false
-        }
-
-        if (!File(path).exists()) {
-            val content = resources.getString(R.string.no_file)
-            TextDialog(content).show(supportFragmentManager, "")
-            return false
-        }
-
-        return true
-    }
 }

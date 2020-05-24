@@ -23,4 +23,5 @@ class TextDialog(private val text: String) :
             builder.create()
         } ?: throw IllegalStateException("Activity cannot be null")
     }
+
 }

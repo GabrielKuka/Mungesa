@@ -1,6 +1,9 @@
 <resources>
     <string name="app_name">Mungesa</string>
 
+    <string name="app_description">Ky program shërben për të ndihmuar mësuesit e gjimnazeve për të lajmëruar prindërit e nxënësve për mungesat e tyre ose për dërgimin e mesazheve të ndryshme.</string>
+    <string name="app_version">Versioni 1.0</string>
+
     <string name="done">Kryej</string>
     <string name="send">Dërgo</string>
     <string name="Po" />
@@ -34,9 +37,12 @@
     <string name="choose_students_warning">Zgjidhni të paktën një nxënës</string>
     <string name="message_sent_success">Mesazhet u dërguan</string>
 
-    <string name="no_file">File i excel nuk ekziston. Shkoni tek settings për të zgjedhur file.</string>
+    <string name="no_file">File i excel nuk ekziston ose është ndryshuar. Shkoni tek settings për të zgjedhur file.</string>
     <string name="invalid_file">File i përzgjedhur nuk është i pranueshëm</string>
     <string name="invalid_path">File Excel nuk është i përzgjedhur. Shkoni tek settings për të zgjedhur file.</string>
+    <string name="invalid_no_of_sheets">File Excel ka më pak se dy sheets. Sigurohuni që file ka të paktën 2 ose më shumë sheets dhe rizgjidheni tek settings.</string>
+    <string name="about_me">Rreth Programit</string>
+    <string name="github_account">github.com/GabrielKuka</string>
 
 
 </resources>

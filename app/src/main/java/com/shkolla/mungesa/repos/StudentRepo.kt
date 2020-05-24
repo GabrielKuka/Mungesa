@@ -30,7 +30,7 @@ class StudentRepo() {
     }
 
     private fun readExcelData() {
-        ExcelFileReader().readWorkSheet(absencePath) { workBook ->
+        ExcelFileReader.readWorkSheet(absencePath) { workBook ->
             val sheet = workBook.getSheetAt(AppData.STUDENT_WORKSHEET)
             val rowCount = sheet.physicalNumberOfRows
             val formulaEvaluator = workBook.creationHelper.createFormulaEvaluator()

@@ -30,7 +30,7 @@ class BulkMessageRepo() {
     }
 
     private fun readExcelData() {
-        ExcelFileReader().readWorkSheet(bulkSmsPath) { workBook ->
+        ExcelFileReader.readWorkSheet(bulkSmsPath) { workBook ->
             val sheet = workBook.getSheetAt(AppData.BULK_SMS_WORKSHEET)
             val rowCount = sheet.physicalNumberOfRows
             val formulaEvaluator = workBook.creationHelper.createFormulaEvaluator()

@@ -5,9 +5,11 @@ import android.os.Environment
 import androidx.appcompat.app.AppCompatActivity
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
+import com.meet.quicktoast.Quicktoast
 import com.obsez.android.lib.filechooser.ChooserDialog
 import com.shkolla.mungesa.R
 import com.shkolla.mungesa.ui.dialogs.TextDialog
+import com.shkolla.mungesa.utils.ExcelFileReader
 import com.shkolla.mungesa.utils.IFileChooser
 import com.shkolla.mungesa.utils.IFilePath
 import java.io.File
@@ -45,6 +47,7 @@ class SettingsActivity : AppCompatActivity() {
                             onFileSelected(path) {
                                 preferenceManager.sharedPreferences.edit()
                                     .putString(EXCEL_FILE_KEY, path).apply()
+                                Quicktoast(requireActivity()).sinfo("File u zgjodh me sukses!")
                             }
 
 
@@ -60,32 +63,39 @@ class SettingsActivity : AppCompatActivity() {
         }
 
         override fun onFileSelected(path: String, action: () -> Unit) {
-            // Validate path first
-            if (!isPathValid(path)) return
+            val fileReader = ExcelFileReader(this)
+
+            // Validate path
+            if (!fileReader.validatePath(path)) return
+
+            // Validate file
+            if (!fileReader.validateFile(File(path))) return
 
             action()
         }
 
-        override fun isPathValid(path: String): Boolean {
-            if (path == "") {
-                val content = resources.getString(R.string.invalid_path)
-                TextDialog(content).show(requireActivity().supportFragmentManager, "")
-                return false
-            }
+        override fun onWrongNumberOfSheets() {
+            val fm = requireActivity().supportFragmentManager
 
-            if (!path.endsWith(".xls") && !path.endsWith(".xlsx")) {
-                val content = resources.getString(R.string.invalid_file)
-                TextDialog(content).show(requireActivity().supportFragmentManager, "")
-                return false
-            }
+            TextDialog(resources.getString(R.string.invalid_no_of_sheets)).show(fm, "")
+        }
 
-            if (!File(path).exists()) {
-                val content = resources.getString(R.string.no_file)
-                TextDialog(content).show(requireActivity().supportFragmentManager, "")
-                return false
-            }
+        override fun onInvalidPath() {
+            val fm = requireActivity().supportFragmentManager
 
-            return true
+            TextDialog(resources.getString(R.string.invalid_path)).show(fm, "")
+        }
+
+        override fun onInvalidFile() {
+            val fm = requireActivity().supportFragmentManager
+
+            TextDialog(resources.getString(R.string.invalid_file)).show(fm, "")
+        }
+
+        override fun onFileMissing() {
+            val fm = requireActivity().supportFragmentManager
+
+            TextDialog(resources.getString(R.string.no_file)).show(fm, "")
         }
     }
 

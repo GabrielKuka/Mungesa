@@ -10,46 +10,91 @@ import java.io.FileNotFoundException
 import java.io.IOException
 import java.text.SimpleDateFormat
 
-class ExcelFileReader {
+class ExcelFileReader(private val filePath: IFilePath) {
 
+    fun validatePath(path: String): Boolean {
+        if (path == "") {
+            // Invalid path
+            filePath.onInvalidPath()
+            return false
+        }
 
-    private fun getWorkBook(path: String): Workbook? {
-        var workBook: Workbook? = null
+        if (!path.endsWith(".xls") && !path.endsWith(".xlsx")) {
+            // Invalid file
+            filePath.onInvalidFile()
+            return false
+        }
 
-        try {
-            val excelFile = FileInputStream(File(path))
-            workBook = when {
-                path.endsWith(".xls") -> {
-                    HSSFWorkbook(excelFile)
-                }
-                path.endsWith(".xlsx") -> {
-                    XSSFWorkbook(excelFile)
-                }
+        if (!File(path).exists()) {
+            // File does not exist
+            filePath.onFileMissing()
+            return false
+        }
 
-                else -> null
+        return true
+    }
+
+    fun validateFile(file: File): Boolean {
+        if (!file.exists()) {
+            // File missing
+            filePath.onFileMissing()
+            return false
+        }
+
+        val workBook = when {
+            file.path.endsWith(".xls") -> {
+                HSSFWorkbook(FileInputStream(file))
             }
-
-        } catch (e: FileNotFoundException) {
-            e.printStackTrace()
-        } catch (e: IOException) {
-            e.printStackTrace()
+            file.path.endsWith(".xlsx") -> {
+                XSSFWorkbook(FileInputStream(file))
+            }
+            else ->  null
         }
 
-
-        return workBook
-    }
-
-    fun readWorkSheet(pathFile: String, read: (workBook: Workbook) -> Unit) {
-
-        val workBook = getWorkBook(pathFile)
-        if (workBook != null) {
-            read(workBook)
+        if (workBook != null && workBook.numberOfSheets < 2){
+            filePath.onWrongNumberOfSheets()
+            return false
         }
 
-
+            return true
     }
+
 
     companion object {
+
+        private fun getWorkBook(path: String): Workbook? {
+            var workBook: Workbook? = null
+
+            try {
+                val excelFile = FileInputStream(File(path))
+                workBook = when {
+                    path.endsWith(".xls") -> {
+                        HSSFWorkbook(excelFile)
+                    }
+                    path.endsWith(".xlsx") -> {
+                        XSSFWorkbook(excelFile)
+                    }
+
+                    else -> null
+                }
+
+            } catch (e: FileNotFoundException) {
+                e.printStackTrace()
+            } catch (e: IOException) {
+                e.printStackTrace()
+            }
+
+
+            return workBook
+        }
+
+        fun readWorkSheet(pathFile: String, read: (workBook: Workbook) -> Unit) {
+
+            val workBook = getWorkBook(pathFile)
+            if (workBook != null) {
+                read(workBook)
+            }
+        }
 
         fun getCellAsString(
             row: Row,
@@ -90,5 +135,11 @@ interface IFileChooser {
 }
 
 interface IFilePath {
-    fun isPathValid(path: String): Boolean
+    fun onInvalidPath()
+
+    fun onInvalidFile()
+
+    fun onFileMissing()
+
+    fun onWrongNumberOfSheets()
 }
