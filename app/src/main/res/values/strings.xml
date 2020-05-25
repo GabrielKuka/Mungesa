@@ -43,6 +43,7 @@
     <string name="invalid_no_of_sheets">File Excel ka më pak se dy sheets. Sigurohuni që file ka të paktën 2 ose më shumë sheets dhe rizgjidheni tek settings.</string>
     <string name="about_me">Rreth Programit</string>
     <string name="github_account">github.com/GabrielKuka</string>
+    <string name="search">Kërko</string>
 
 
 </resources>

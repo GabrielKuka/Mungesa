@@ -5,7 +5,9 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.inputmethod.EditorInfo
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SearchView
 import androidx.core.os.bundleOf
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
@@ -101,6 +103,24 @@ class StudentsPage : AppCompatActivity(), StudentAdapter.StudentInteraction,
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.students_page_menu, menu)
+
+        val searchItem = menu?.findItem(R.id.search_button)
+        val searchView = searchItem?.actionView as SearchView
+        with(searchView) {
+            imeOptions = EditorInfo.IME_ACTION_DONE
+            setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+                override fun onQueryTextSubmit(query: String?): Boolean {
+                    return false
+                }
+
+                override fun onQueryTextChange(text: String?): Boolean {
+                    // filter
+                    studentAdapter.filter.filter(text)
+                    return false
+                }
+            })
+        }
+
         return true
     }
 

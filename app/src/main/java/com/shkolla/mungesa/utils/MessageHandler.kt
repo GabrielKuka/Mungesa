@@ -55,7 +55,6 @@ object MessageHandler {
                     .append("\n")
                     .append(" ditën ")
                     .append(day.name.toLowerCase())
-                    .append("\n")
 
                 for (hour in day.hours) {
                     if (hour.isChecked) {

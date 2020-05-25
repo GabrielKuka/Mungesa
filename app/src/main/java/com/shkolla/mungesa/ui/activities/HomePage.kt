@@ -17,6 +17,7 @@ import com.shkolla.mungesa.ui.dialogs.TextDialog
 import com.shkolla.mungesa.utils.ExcelFileReader
 import com.shkolla.mungesa.utils.IFilePath
 import kotlinx.android.synthetic.main.home_page_activity.*
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
@@ -41,7 +42,7 @@ class HomePage : AppCompatActivity(), IFilePath {
             .getString(SettingsActivity.EXCEL_FILE_KEY, "").toString()
 
         absence_button.setOnClickListener {
-            lifecycleScope.launch(Dispatchers.Main) {
+            CoroutineScope(Dispatchers.Main).launch {
                 val result = async(Dispatchers.Default) { checkExcelFile(pathPref) }
 
                 if (result.await()) {
@@ -51,7 +52,7 @@ class HomePage : AppCompatActivity(), IFilePath {
         }
 
         bulk_sms_button.setOnClickListener {
-            lifecycleScope.launch(Dispatchers.Main) {
+            CoroutineScope(Dispatchers.Main).launch {
                 val result = async(Dispatchers.Default) { checkExcelFile(pathPref) }
 
                 if (result.await()) {

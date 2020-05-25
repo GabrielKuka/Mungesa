@@ -3,7 +3,9 @@ package com.shkolla.mungesa.ui.activities
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.inputmethod.EditorInfo
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SearchView
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -62,6 +64,26 @@ class BulkSms : AppCompatActivity(), BasicDialog.DialogButtonInteraction,
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.bulk_sms_menu, menu)
+
+        val searchItem = menu?.findItem(R.id.search_button)
+        val searchView = searchItem?.actionView as SearchView
+
+        with(searchView) {
+            imeOptions = EditorInfo.IME_ACTION_DONE
+            setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+                override fun onQueryTextSubmit(query: String?): Boolean {
+                    return false
+                }
+
+                override fun onQueryTextChange(text: String?): Boolean {
+                    // filter
+                    bulkMessageAdapter.filter.filter(text)
+                    return false
+                }
+            })
+        }
+
+
         return true
     }
 
@@ -82,7 +104,10 @@ class BulkSms : AppCompatActivity(), BasicDialog.DialogButtonInteraction,
                 if (File(path).exists()) {
                     bulkSmsViewModel.initBulkMessages()
                 } else {
-                    TextDialog(resources.getString(R.string.no_file)).show(supportFragmentManager, "")
+                    TextDialog(resources.getString(R.string.no_file)).show(
+                        supportFragmentManager,
+                        ""
+                    )
                 }
 
                 true
