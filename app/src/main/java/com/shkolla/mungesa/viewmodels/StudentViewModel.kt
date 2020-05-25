@@ -83,26 +83,27 @@ class StudentViewModel(application: Application) : AndroidViewModel(application)
         return false
     }
 
-    fun resetStudents() = viewModelScope.launch {
-        withContext(Dispatchers.Default) {
-            StudentRepo.students.forEach { st ->
-                if (st.isChecked) {
-                    st.days.forEach { d ->
-                        if (d.isChecked) {
-                            d.hours.forEach { h ->
-                                if (h.isChecked) {
-                                    h.isChecked = false
-                                }
+    fun resetStudents() = viewModelScope.launch(Dispatchers.Default) {
+
+        StudentRepo.students.forEach { st ->
+            if (st.isChecked) {
+                st.days.forEach { d ->
+                    if (d.isChecked) {
+                        d.hours.forEach { h ->
+                            if (h.isChecked) {
+                                h.isChecked = false
                             }
-                            d.isChecked = false
                         }
+                        d.isChecked = false
                     }
-                    st.isChecked = false
                 }
+                st.isChecked = false
             }
         }
 
-        _students.notifyObserver()
+        withContext(Dispatchers.Main) {
+            _students.notifyObserver()
+        }
     }
 
     private fun <T> MutableLiveData<T>.notifyObserver() {

@@ -39,16 +39,13 @@
         </activity>
         <activity
             android:name=".ui.activities.HoursPage"
-            android:configChanges="orientation|screenSize"
-            android:theme="@style/AbsenceActivities" />
+            android:configChanges="orientation|screenSize" />
         <activity
             android:name=".ui.activities.DaysPage"
-            android:configChanges="orientation|screenSize"
-            android:theme="@style/AbsenceActivities" />
+            android:configChanges="orientation|screenSize" />
         <activity
             android:name=".ui.activities.StudentsPage"
-            android:configChanges="orientation|screenSize"
-            android:theme="@style/AbsenceActivities" />
+            android:configChanges="orientation|screenSize" />
     </application>
 
 </manifest>

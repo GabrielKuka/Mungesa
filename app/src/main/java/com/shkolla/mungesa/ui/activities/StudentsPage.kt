@@ -78,9 +78,10 @@ class StudentsPage : AppCompatActivity(), StudentAdapter.StudentInteraction,
 
     override fun onStudentSelected(student: Student) {
         val bundle = bundleOf("currentStudent" to student)
-        val i = Intent(this, DaysPage::class.java)
+        val i = Intent(this@StudentsPage, DaysPage::class.java)
         i.putExtras(bundle)
         startActivityForResult(i, SELECT_STUDENT_REQUEST)
+
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -121,8 +122,6 @@ class StudentsPage : AppCompatActivity(), StudentAdapter.StudentInteraction,
                         ""
                     )
                 }
-
-
 
                 true
             }
