@@ -10,6 +10,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.preference.PreferenceManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.meet.quicktoast.Quicktoast
 import com.shkolla.mungesa.R
 import com.shkolla.mungesa.databinding.BulkSmsActivityBinding
@@ -18,6 +19,7 @@ import com.shkolla.mungesa.repos.AppData.SEND_MESSAGE_PURPOSE
 import com.shkolla.mungesa.ui.adapters.BulkMessageAdapter
 import com.shkolla.mungesa.ui.dialogs.BasicDialog
 import com.shkolla.mungesa.ui.dialogs.TextDialog
+import com.shkolla.mungesa.utils.LinearLayoutManagerWrapper
 import com.shkolla.mungesa.utils.MessageHandler
 import com.shkolla.mungesa.viewmodels.BulkSmsViewModel
 import kotlinx.coroutines.CoroutineScope
@@ -59,7 +61,10 @@ class BulkSms : AppCompatActivity(), BasicDialog.DialogButtonInteraction,
 
     private fun initRecyclerView() {
         bulkMessageAdapter = BulkMessageAdapter(this)
+        val layoutManager = LinearLayoutManagerWrapper(this, LinearLayoutManager.VERTICAL, false)
+
         binder.bulkSmsRv.adapter = bulkMessageAdapter
+        binder.bulkSmsRv.layoutManager = layoutManager
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -102,6 +107,7 @@ class BulkSms : AppCompatActivity(), BasicDialog.DialogButtonInteraction,
                     .getString(SettingsActivity.EXCEL_FILE_KEY, "").toString()
 
                 if (File(path).exists()) {
+                    binder.bulkSmsRv.stopScroll()
                     bulkSmsViewModel.initBulkMessages()
                 } else {
                     TextDialog(resources.getString(R.string.no_file)).show(

@@ -13,7 +13,7 @@ import com.shkolla.mungesa.databinding.BulkMessageItemBinding
 import com.shkolla.mungesa.models.BulkMessage
 
 class BulkMessageAdapter(private val interaction: BulkMessageInteraction? = null) :
-    RecyclerView.Adapter<RecyclerView.ViewHolder>(), Filterable {
+    RecyclerView.Adapter<BulkMessageAdapter.BulkMsgViewHolder>(), Filterable {
 
     private val bulkListAll: MutableList<BulkMessage> = mutableListOf()
 
@@ -83,7 +83,7 @@ class BulkMessageAdapter(private val interaction: BulkMessageInteraction? = null
     }
     private val differ = AsyncListDiffer(this, DIFF_CALLBACK)
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BulkMsgViewHolder {
         val binder: BulkMessageItemBinding = DataBindingUtil.inflate(
             LayoutInflater.from(parent.context),
             R.layout.bulk_message_item,
@@ -94,13 +94,9 @@ class BulkMessageAdapter(private val interaction: BulkMessageInteraction? = null
         return BulkMsgViewHolder(binder)
     }
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        when (holder) {
-            is BulkMsgViewHolder -> {
-                holder.binder.interaction = interaction
-                holder.binder.bulkMessage = getBulkMessageAt(position)
-            }
-        }
+    override fun onBindViewHolder(holder: BulkMsgViewHolder, position: Int) {
+        holder.binder.interaction = interaction
+        holder.binder.bulkMessage = getBulkMessageAt(position)
     }
 
     class BulkMsgViewHolder

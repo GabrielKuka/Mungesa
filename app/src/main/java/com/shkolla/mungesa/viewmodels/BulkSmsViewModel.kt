@@ -22,7 +22,7 @@ class BulkSmsViewModel(application: Application) : AndroidViewModel(application)
         if (!_isLoading.value!!) {        // Makes sure it doesn't reload while it is already reloading
             _isLoading.value = true
 
-            CoroutineScope(Dispatchers.Default).launch {
+            CoroutineScope(Dispatchers.IO).launch {
                 BulkMessageRepo().initBulkMessages(getApplication())
                 withContext(Dispatchers.Main) {
                     _bulkMessages.value = BulkMessageRepo.bulkMessages

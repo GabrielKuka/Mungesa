@@ -5,9 +5,6 @@ import androidx.preference.PreferenceManager
 import com.shkolla.mungesa.models.BulkMessage
 import com.shkolla.mungesa.ui.activities.SettingsActivity
 import com.shkolla.mungesa.utils.ExcelFileReader
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 class BulkMessageRepo() {
     companion object {
@@ -35,18 +32,17 @@ class BulkMessageRepo() {
             val rowCount = sheet.physicalNumberOfRows
             val formulaEvaluator = workBook.creationHelper.createFormulaEvaluator()
 
-            CoroutineScope(Dispatchers.Default).launch {
-                for (rowPos in 1 until rowCount) {
-                    val row = sheet.getRow(rowPos)
+            for (rowPos in 1 until rowCount) {
+                val row = sheet.getRow(rowPos)
 
-                    val studentFullName = ExcelFileReader.getCellAsString(row, 0, formulaEvaluator)
-                    val message = ExcelFileReader.getCellAsString(row, 1, formulaEvaluator)
-                    val phoneNumber = ExcelFileReader.getCellAsString(row, 2, formulaEvaluator)
+                val studentFullName = ExcelFileReader.getCellAsString(row, 0, formulaEvaluator)
+                val message = ExcelFileReader.getCellAsString(row, 1, formulaEvaluator)
+                val phoneNumber = ExcelFileReader.getCellAsString(row, 2, formulaEvaluator)
 
-                    bulkMessages.add(BulkMessage(studentFullName!!, message!!, phoneNumber!!))
+                bulkMessages.add(BulkMessage(studentFullName!!, message!!, phoneNumber!!))
 
-                }
             }
+
         }
     }
 
