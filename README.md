@@ -34,5 +34,3 @@
 ![image](https://user-images.githubusercontent.com/17888328/83955572-6ac16580-a854-11ea-8590-2d392cf6e69c.png)
 
 ![image](https://user-images.githubusercontent.com/17888328/83955577-73b23700-a854-11ea-86e2-e34b6e26242e.png)
-
-Email: gabrie.kuka@gmail.com
